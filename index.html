@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Orçamento para Impressão 3D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-cyan-400">Calculadora de Orçamento 3D</h1>
+            <p class="text-gray-400 mt-2">Preencha os campos abaixo para calcular o preço de venda da sua peça.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Coluna de Inputs -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Configurações Gerais -->
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2 text-cyan-300">Parâmetros Gerais</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="resinPrice" class="block text-sm font-medium text-gray-300">Preço da Resina (R$)</label>
+                            <input type="number" id="resinPrice" value="150" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="resinWeight" class="block text-sm font-medium text-gray-300">Peso da Garrafa (g)</label>
+                            <input type="number" id="resinWeight" value="1000" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="laborRate" class="block text-sm font-medium text-gray-300">Valor da Hora de Trabalho (R$)</label>
+                            <input type="number" id="laborRate" value="25" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="kwhPrice" class="block text-sm font-medium text-gray-300">Preço do kWh (R$)</label>
+                            <input type="number" id="kwhPrice" step="0.01" value="0.90" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalhes da Peça -->
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2 text-cyan-300">Detalhes da Peça</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="partWeight" class="block text-sm font-medium text-gray-300">Peso da Peça (g)</label>
+                            <input type="number" id="partWeight" placeholder="Ex: 35" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="printTime" class="block text-sm font-medium text-gray-300">Tempo de Impressão (h)</label>
+                            <input type="number" id="printTime" placeholder="Ex: 4.5" step="0.1" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="laborTime" class="block text-sm font-medium text-gray-300">Tempo de Mão de Obra (h)</label>
+                            <input type="number" id="laborTime" placeholder="Preparo, etc." step="0.1" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="printerPower" class="block text-sm font-medium text-gray-300">Consumo Impressora (W)</label>
+                            <input type="number" id="printerPower" value="60" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                         <div>
+                            <label for="otherCosts" class="block text-sm font-medium text-gray-300">Custos Adicionais (R$)</label>
+                            <input type="number" id="otherCosts" value="2" placeholder="Álcool, luvas..." class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div>
+                            <label for="failureRate" class="block text-sm font-medium text-gray-300">Taxa de Falha (%)</label>
+                            <input type="number" id="failureRate" value="10" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label for="profitMargin" class="block text-sm font-medium text-gray-300">Margem de Lucro (%)</label>
+                            <input type="number" id="profitMargin" value="100" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm p-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Resultados -->
+            <div class="lg:col-span-1">
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg sticky top-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-cyan-300">Resultado do Orçamento</h2>
+                    <div class="space-y-3 text-gray-300">
+                        <div class="flex justify-between items-center">
+                            <span>Custo da Resina:</span>
+                            <span id="resinCostResult" class="font-medium text-white">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Custo de Produção:</span>
+                            <span id="productionCostResult" class="font-medium text-white">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Custo de Mão de Obra:</span>
+                            <span id="laborCostResult" class="font-medium text-white">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-orange-400">Custo de Falha:</span>
+                            <span id="failureCostResult" class="font-medium text-orange-400">R$ 0,00</span>
+                        </div>
+                        <hr class="border-gray-600 my-3">
+                        <div class="flex justify-between items-center text-lg">
+                            <span class="font-semibold">Custo Total:</span>
+                            <span id="totalCostResult" class="font-bold text-white">R$ 0,00</span>
+                        </div>
+                         <div class="flex justify-between items-center text-lg">
+                            <span class="font-semibold">Lucro:</span>
+                            <span id="profitResult" class="font-bold text-green-400">R$ 0,00</span>
+                        </div>
+                        <hr class="border-cyan-500 my-4">
+                        <div class="flex justify-between items-center text-2xl mt-4">
+                            <span class="font-bold text-cyan-400">Preço de Venda:</span>
+                            <span id="finalPriceResult" class="font-extrabold text-cyan-400">R$ 0,00</span>
+                        </div>
+                    </div>
+                     <div class="mt-6">
+                        <button id="calculateBtn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 shadow-lg">
+                            Calcular
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- Elementos do DOM ---
+        const resinPriceInput = document.getElementById('resinPrice');
+        const resinWeightInput = document.getElementById('resinWeight');
+        const laborRateInput = document.getElementById('laborRate');
+        const kwhPriceInput = document.getElementById('kwhPrice');
+        const partWeightInput = document.getElementById('partWeight');
+        const printTimeInput = document.getElementById('printTime');
+        const laborTimeInput = document.getElementById('laborTime');
+        const printerPowerInput = document.getElementById('printerPower');
+        const otherCostsInput = document.getElementById('otherCosts');
+        const failureRateInput = document.getElementById('failureRate');
+        const profitMarginInput = document.getElementById('profitMargin');
+        const calculateBtn = document.getElementById('calculateBtn');
+
+        // --- Elementos de Resultado ---
+        const resinCostResultEl = document.getElementById('resinCostResult');
+        const productionCostResultEl = document.getElementById('productionCostResult');
+        const laborCostResultEl = document.getElementById('laborCostResult');
+        const failureCostResultEl = document.getElementById('failureCostResult');
+        const totalCostResultEl = document.getElementById('totalCostResult');
+        const profitResultEl = document.getElementById('profitResult');
+        const finalPriceResultEl = document.getElementById('finalPriceResult');
+
+        // --- Função para formatar como moeda (BRL) ---
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // --- Função Principal de Cálculo ---
+        function calculateQuote() {
+            // Pega os valores dos inputs, convertendo para número e tratando casos de campo vazio (NaN)
+            const resinPrice = parseFloat(resinPriceInput.value) || 0;
+            const resinWeight = parseFloat(resinWeightInput.value) || 1; // Evita divisão por zero
+            const laborRate = parseFloat(laborRateInput.value) || 0;
+            const kwhPrice = parseFloat(kwhPriceInput.value) || 0;
+            const partWeight = parseFloat(partWeightInput.value) || 0;
+            const printTime = parseFloat(printTimeInput.value) || 0;
+            const laborTime = parseFloat(laborTimeInput.value) || 0;
+            const printerPower = parseFloat(printerPowerInput.value) || 0;
+            const otherCosts = parseFloat(otherCostsInput.value) || 0;
+            const failureRate = parseFloat(failureRateInput.value) || 0;
+            const profitMargin = parseFloat(profitMarginInput.value) || 0;
+
+            // --- Cálculos ---
+
+            // 1. Custo do Material (Resina)
+            const costPerGram = resinPrice / resinWeight;
+            const resinCost = partWeight * costPerGram;
+
+            // 2. Custo de Produção
+            const energyCost = (printerPower / 1000) * printTime * kwhPrice;
+            const depreciationCost = printTime * 0.50; // Depreciação simbólica de R$0.50/hora
+            const productionCost = energyCost + depreciationCost + otherCosts;
+
+            // 3. Custo de Mão de Obra
+            const laborCost = laborTime * laborRate;
+
+            // 4. Custo de Falha (calculado sobre Resina + Produção)
+            const materialAndProductionCost = resinCost + productionCost;
+            const failureCost = materialAndProductionCost * (failureRate / 100);
+
+            // 5. Custo Total (soma de todos os custos)
+            const totalCost = materialAndProductionCost + laborCost + failureCost;
+
+            // 6. Lucro e Preço Final (calculados sobre o Custo Total)
+            const profit = totalCost * (profitMargin / 100);
+            const finalPrice = totalCost + profit;
+
+            // --- Exibição dos Resultados ---
+            resinCostResultEl.textContent = formatCurrency(resinCost);
+            productionCostResultEl.textContent = formatCurrency(productionCost);
+            laborCostResultEl.textContent = formatCurrency(laborCost);
+            failureCostResultEl.textContent = formatCurrency(failureCost);
+            totalCostResultEl.textContent = formatCurrency(totalCost);
+            profitResultEl.textContent = formatCurrency(profit);
+            finalPriceResultEl.textContent = formatCurrency(finalPrice);
+        }
+
+        // --- Event Listeners ---
+        calculateBtn.addEventListener('click', calculateQuote);
+
+        const allInputs = document.querySelectorAll('input');
+        allInputs.forEach(input => {
+            input.addEventListener('input', calculateQuote);
+        });
+
+        window.onload = calculateQuote;
+
+    </script>
+</body>
+</html>
